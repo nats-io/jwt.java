@@ -11,7 +11,7 @@ plugins {
     id 'signing'
 }
 
-def jarVersion = "1.0.0"
+def jarVersion = "1.5.0"
 group = 'io.nats'
 
 def isMerge = System.getenv("BUILD_EVENT") == "push"
@@ -27,10 +27,15 @@ java {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
+    implementation 'io.nats:nkeys-java:1.5.0'
+    implementation 'io.nats:jnats-json:1.5.0-SNAPSHOT'
+
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
     testImplementation 'com.github.stefanbirkner:system-lambda:1.2.1'
     testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.12.3'
@@ -48,7 +53,7 @@ test {
 javadoc {
     options.overview = 'src/main/javadoc/overview.html' // relative to source root
     source = sourceSets.main.allJava
-    title = "NATS.IO Java Server Runner"
+    title = "NATS.IO Java JWT Utilities"
     classpath = sourceSets.main.runtimeClasspath
     doLast {
         if (!OperatingSystem.current().isWindows()) {
