@@ -20,6 +20,7 @@ import io.nats.client.support.JsonValueUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static io.nats.client.support.JsonUtils.beginJson;
 import static io.nats.client.support.JsonUtils.endJson;
@@ -28,7 +29,7 @@ public class Permission implements JsonSerializable {
     public List<String> allow;
     public List<String> deny;
 
-    static Permission optionalInstance(JsonValue jv) {
+    public static Permission optionalInstance(JsonValue jv) {
         return jv == null ? null : new Permission(jv);
     }
 
@@ -65,5 +66,23 @@ public class Permission implements JsonSerializable {
         JsonUtils.addStrings(sb, "allow", allow);
         JsonUtils.addStrings(sb, "deny", deny);
         return endJson(sb).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Permission that = (Permission) o;
+
+        if (!Objects.equals(allow, that.allow)) return false;
+        return Objects.equals(deny, that.deny);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = allow != null ? allow.hashCode() : 0;
+        result = 31 * result + (deny != null ? deny.hashCode() : 0);
+        return result;
     }
 }

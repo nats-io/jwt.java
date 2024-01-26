@@ -15,6 +15,8 @@ package io.nats.jwt;
 
 import io.nats.client.support.*;
 
+import java.util.Objects;
+
 import static io.nats.client.support.JsonUtils.beginJson;
 import static io.nats.client.support.JsonUtils.endJson;
 import static io.nats.jwt.JwtUtils.AUTH_RESPONSE_CLAIM_TYPE;
@@ -67,5 +69,27 @@ public class AuthorizationResponse extends GenericClaimFields<AuthorizationRespo
     public AuthorizationResponse issuerAccount(String issuerAccount) {
         this.issuerAccount = issuerAccount;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        AuthorizationResponse that = (AuthorizationResponse) o;
+
+        if (!Objects.equals(jwt, that.jwt)) return false;
+        if (!Objects.equals(error, that.error)) return false;
+        return Objects.equals(issuerAccount, that.issuerAccount);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (jwt != null ? jwt.hashCode() : 0);
+        result = 31 * result + (error != null ? error.hashCode() : 0);
+        result = 31 * result + (issuerAccount != null ? issuerAccount.hashCode() : 0);
+        return result;
     }
 }

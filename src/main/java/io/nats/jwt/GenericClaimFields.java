@@ -21,6 +21,7 @@ import io.nats.client.support.JsonValueUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class GenericClaimFields<B> implements JsonSerializable {
     public List<String> tags;
@@ -74,5 +75,25 @@ public abstract class GenericClaimFields<B> implements JsonSerializable {
     public B tags(List<String> tags) {
         this.tags = tags;
         return getThis();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GenericClaimFields<?> that = (GenericClaimFields<?>) o;
+
+        if (version != that.version) return false;
+        if (!Objects.equals(tags, that.tags)) return false;
+        return Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = tags != null ? tags.hashCode() : 0;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + version;
+        return result;
     }
 }

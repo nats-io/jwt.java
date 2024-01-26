@@ -20,6 +20,7 @@ import io.nats.client.support.JsonValueUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static io.nats.client.support.JsonUtils.beginJson;
 import static io.nats.client.support.JsonUtils.endJson;
@@ -157,5 +158,46 @@ public class UserClaim extends GenericClaimFields<UserClaim> {
     public UserClaim allowedConnectionTypes(List<String> allowedConnectionTypes) {
         this.allowedConnectionTypes = allowedConnectionTypes;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        UserClaim userClaim = (UserClaim) o;
+
+        if (subs != userClaim.subs) return false;
+        if (data != userClaim.data) return false;
+        if (payload != userClaim.payload) return false;
+        if (bearerToken != userClaim.bearerToken) return false;
+        if (!Objects.equals(issuerAccount, userClaim.issuerAccount))
+            return false;
+        if (!Objects.equals(pub, userClaim.pub)) return false;
+        if (!Objects.equals(sub, userClaim.sub)) return false;
+        if (!Objects.equals(resp, userClaim.resp)) return false;
+        if (!Objects.equals(src, userClaim.src)) return false;
+        if (!Objects.equals(timeRanges, userClaim.timeRanges)) return false;
+        if (!Objects.equals(locale, userClaim.locale)) return false;
+        return Objects.equals(allowedConnectionTypes, userClaim.allowedConnectionTypes);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (issuerAccount != null ? issuerAccount.hashCode() : 0);
+        result = 31 * result + (pub != null ? pub.hashCode() : 0);
+        result = 31 * result + (sub != null ? sub.hashCode() : 0);
+        result = 31 * result + (resp != null ? resp.hashCode() : 0);
+        result = 31 * result + (src != null ? src.hashCode() : 0);
+        result = 31 * result + (timeRanges != null ? timeRanges.hashCode() : 0);
+        result = 31 * result + (locale != null ? locale.hashCode() : 0);
+        result = 31 * result + (int) (subs ^ (subs >>> 32));
+        result = 31 * result + (int) (data ^ (data >>> 32));
+        result = 31 * result + (int) (payload ^ (payload >>> 32));
+        result = 31 * result + (bearerToken ? 1 : 0);
+        result = 31 * result + (allowedConnectionTypes != null ? allowedConnectionTypes.hashCode() : 0);
+        return result;
     }
 }

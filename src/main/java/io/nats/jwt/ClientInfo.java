@@ -18,6 +18,9 @@ import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import static io.nats.client.support.JsonUtils.beginJson;
 import static io.nats.client.support.JsonUtils.endJson;
 
@@ -33,7 +36,7 @@ public class ClientInfo implements JsonSerializable {
     public final String mqttId;
     public final String nonce;
 
-    static ClientInfo optionalInstance(JsonValue jv) {
+    public static ClientInfo optionalInstance(JsonValue jv) {
         return jv == null ? null : new ClientInfo(jv);
     }
 
@@ -64,5 +67,40 @@ public class ClientInfo implements JsonSerializable {
         JsonUtils.addField(sb, "mqtt_id", mqttId);
         JsonUtils.addField(sb, "nonce", nonce);
         return endJson(sb).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ClientInfo that = (ClientInfo) o;
+
+        if (id != that.id) return false;
+        if (!Objects.equals(host, that.host)) return false;
+        if (!Objects.equals(user, that.user)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(tags, that.tags)) return false;
+        if (!Objects.equals(nameTag, that.nameTag)) return false;
+        if (!Objects.equals(kind, that.kind)) return false;
+        if (!Objects.equals(type, that.type)) return false;
+        if (!Objects.equals(mqttId, that.mqttId)) return false;
+        return Objects.equals(nonce, that.nonce);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = host != null ? host.hashCode() : 0;
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(tags);
+        result = 31 * result + (nameTag != null ? nameTag.hashCode() : 0);
+        result = 31 * result + (kind != null ? kind.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (mqttId != null ? mqttId.hashCode() : 0);
+        result = 31 * result + (nonce != null ? nonce.hashCode() : 0);
+        return result;
     }
 }

@@ -19,6 +19,7 @@ import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 import static io.nats.client.support.JsonUtils.beginJson;
 import static io.nats.client.support.JsonUtils.endJson;
@@ -27,7 +28,7 @@ public class TimeRange implements JsonSerializable {
     public String start;
     public String end;
 
-    static List<TimeRange> optionalListOf(JsonValue jv) {
+    public static List<TimeRange> optionalListOf(JsonValue jv) {
         return JsonValueUtils.optionalListOf(jv, TimeRange::new);
     }
 
@@ -47,5 +48,23 @@ public class TimeRange implements JsonSerializable {
         JsonUtils.addField(sb, "start", start);
         JsonUtils.addField(sb, "end", end);
         return endJson(sb).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TimeRange timeRange = (TimeRange) o;
+
+        if (!Objects.equals(start, timeRange.start)) return false;
+        return Objects.equals(end, timeRange.end);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = start != null ? start.hashCode() : 0;
+        result = 31 * result + (end != null ? end.hashCode() : 0);
+        return result;
     }
 }

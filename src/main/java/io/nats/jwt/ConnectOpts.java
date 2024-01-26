@@ -18,6 +18,8 @@ import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
 
+import java.util.Objects;
+
 import static io.nats.client.support.JsonUtils.beginJson;
 import static io.nats.client.support.JsonUtils.endJson;
 
@@ -33,7 +35,7 @@ public class ConnectOpts implements JsonSerializable {
     public final String version;
     public final int protocol;
 
-    static ConnectOpts optionalInstance(JsonValue jv) {
+    public static ConnectOpts optionalInstance(JsonValue jv) {
         return jv == null ? null : new ConnectOpts(jv);
     }
 
@@ -64,5 +66,39 @@ public class ConnectOpts implements JsonSerializable {
         JsonUtils.addField(sb, "version", version);
         JsonUtils.addField(sb, "protocol", protocol);
         return endJson(sb).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConnectOpts that = (ConnectOpts) o;
+
+        if (protocol != that.protocol) return false;
+        if (!Objects.equals(jwt, that.jwt)) return false;
+        if (!Objects.equals(nkey, that.nkey)) return false;
+        if (!Objects.equals(sig, that.sig)) return false;
+        if (!Objects.equals(authToken, that.authToken)) return false;
+        if (!Objects.equals(user, that.user)) return false;
+        if (!Objects.equals(pass, that.pass)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(lang, that.lang)) return false;
+        return Objects.equals(version, that.version);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = jwt != null ? jwt.hashCode() : 0;
+        result = 31 * result + (nkey != null ? nkey.hashCode() : 0);
+        result = 31 * result + (sig != null ? sig.hashCode() : 0);
+        result = 31 * result + (authToken != null ? authToken.hashCode() : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (pass != null ? pass.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (lang != null ? lang.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + protocol;
+        return result;
     }
 }

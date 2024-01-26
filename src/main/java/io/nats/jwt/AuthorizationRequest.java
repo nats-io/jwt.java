@@ -17,6 +17,8 @@ import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
 
+import java.util.Objects;
+
 import static io.nats.client.support.JsonUtils.beginJson;
 import static io.nats.client.support.JsonUtils.endJson;
 import static io.nats.jwt.JwtUtils.AUTH_REQUEST_CLAIM_TYPE;
@@ -89,5 +91,33 @@ public class AuthorizationRequest extends GenericClaimFields<AuthorizationReques
     public AuthorizationRequest requestNonce(String requestNonce) {
         this.requestNonce = requestNonce;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        AuthorizationRequest that = (AuthorizationRequest) o;
+
+        if (!Objects.equals(serverId, that.serverId)) return false;
+        if (!Objects.equals(userNkey, that.userNkey)) return false;
+        if (!Objects.equals(clientInfo, that.clientInfo)) return false;
+        if (!Objects.equals(connectOpts, that.connectOpts)) return false;
+        if (!Objects.equals(clientTls, that.clientTls)) return false;
+        return Objects.equals(requestNonce, that.requestNonce);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (serverId != null ? serverId.hashCode() : 0);
+        result = 31 * result + (userNkey != null ? userNkey.hashCode() : 0);
+        result = 31 * result + (clientInfo != null ? clientInfo.hashCode() : 0);
+        result = 31 * result + (connectOpts != null ? connectOpts.hashCode() : 0);
+        result = 31 * result + (clientTls != null ? clientTls.hashCode() : 0);
+        result = 31 * result + (requestNonce != null ? requestNonce.hashCode() : 0);
+        return result;
     }
 }
