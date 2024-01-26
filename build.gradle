@@ -37,7 +37,6 @@ dependencies {
     implementation 'io.nats:jnats-json:1.5.0-SNAPSHOT'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
-    testImplementation 'com.github.stefanbirkner:system-lambda:1.2.1'
     testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.12.3'
 }
 

@@ -19,6 +19,7 @@ import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 import static io.nats.client.support.JsonUtils.beginJson;
 import static io.nats.client.support.JsonUtils.endJson;
@@ -29,7 +30,7 @@ public class ClientTls implements JsonSerializable {
     public final List<String> certs;
     public final List<List<String>> verifiedChains;
 
-    static ClientTls optionalInstance(JsonValue jv) {
+    public static ClientTls optionalInstance(JsonValue jv) {
         return jv == null ? null : new ClientTls(jv);
     }
 
@@ -37,7 +38,7 @@ public class ClientTls implements JsonSerializable {
         version = JsonValueUtils.readString(jv, "version");
         cipher = JsonValueUtils.readString(jv, "cipher");
         certs = JsonValueUtils.readOptionalStringList(jv, "certs");
-        verifiedChains = null; // verified_chains
+        verifiedChains = null; // TODO verified_chains
     }
 
     @Override
@@ -47,5 +48,27 @@ public class ClientTls implements JsonSerializable {
         JsonUtils.addField(sb, "protocol", cipher);
         JsonUtils.addStrings(sb, "tags", certs);
         return endJson(sb).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ClientTls clientTls = (ClientTls) o;
+
+        if (!Objects.equals(version, clientTls.version)) return false;
+        if (!Objects.equals(cipher, clientTls.cipher)) return false;
+        if (!Objects.equals(certs, clientTls.certs)) return false;
+        return Objects.equals(verifiedChains, clientTls.verifiedChains);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = version != null ? version.hashCode() : 0;
+        result = 31 * result + (cipher != null ? cipher.hashCode() : 0);
+        result = 31 * result + (certs != null ? certs.hashCode() : 0);
+        result = 31 * result + (verifiedChains != null ? verifiedChains.hashCode() : 0);
+        return result;
     }
 }

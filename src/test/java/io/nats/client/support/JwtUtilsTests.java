@@ -15,12 +15,17 @@ package io.nats.client.support;
 
 import io.nats.client.NKey;
 import io.nats.jwt.*;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import static io.nats.client.support.JsonUtils.beginJson;
+import static io.nats.client.support.JsonUtils.endJson;
 import static io.nats.jwt.JwtUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -48,6 +53,7 @@ public class JwtUtilsTests {
 
         String jwt = issueUserJWT(SIGNING_KEY, ACCOUNT_ID, new String(USER_KEY.getPublicKey()), null, null, null, 1633043378L, "audience");
         String claimBody = getClaimBody(jwt);
+        String claimBodyCoverage = getClaimBody(jwt.getBytes());
         String cred = String.format(NATS_USER_JWT_FORMAT, jwt, new String(USER_KEY.getSeed()));
         /*
             Formatted Claim Body:
@@ -69,6 +75,7 @@ public class JwtUtilsTests {
             }
          */
         assertEquals(expectedClaimBody, claimBody);
+        assertEquals(expectedClaimBody, claimBodyCoverage);
         assertEquals(expectedCred, cred);
     }
 
@@ -167,6 +174,7 @@ public class JwtUtilsTests {
 
     @Test
     public void issueUserJWTSuccessCustom() throws Exception {
+        //noinspection RedundantArrayCreation COVERAGE
         UserClaim userClaim = new UserClaim("ACXZRALIL22WRETDRXYKOYDB7XC3E7MBSVUSUMFACO6OM5VPRNFMOOO6")
             .pub(new Permission()
                 .allow(new String[] {"pub-allow-subject"})
@@ -304,13 +312,12 @@ public class JwtUtilsTests {
         UserClaim uc = new UserClaim("test-issuer-account");
         assertEquals(BASIC_JSON, uc.toJson());
 
-        List<TimeRange> timeRanges = new ArrayList<>();
-        timeRanges.add(new TimeRange("01:15:00", "03:15:00"));
+        List<TimeRange> timeRanges = getTestFullTimeRanges();
 
         uc.tags("tag1", "tag2")
-            .pub(new Permission().allow("pa1", "pa2").deny("pd1", "pd2"))
-            .sub(new Permission().allow("sa1", "sa2").deny("sd1", "sd2"))
-            .resp(new ResponsePermission().max(99).expires(999))
+            .pub(getTestFullPub())
+            .sub(getTestFullSub())
+            .resp(getTestFullResponse())
             .src("src1", "src2")
             .timeRanges(timeRanges)
             .locale("US/Eastern")
@@ -322,8 +329,159 @@ public class JwtUtilsTests {
         assertEquals(FULL_JSON, uc.toJson());
     }
 
+    static class TestGenericClaimFields extends GenericClaimFields<TestGenericClaimFields> {
+        public static final String TYPE = "tgcfType";
+        public long test;
+
+        public TestGenericClaimFields(int version) {
+            super(TYPE, version);
+            test = System.currentTimeMillis();
+        }
+
+        public TestGenericClaimFields(JsonValue jv, String expectedType, int... validVersions) {
+            super(jv, expectedType, validVersions);
+            test = JsonValueUtils.readLong(jv, "test");
+        }
+
+        @Override
+        protected TestGenericClaimFields getThis() {
+            return this;
+        }
+
+        @Override
+        public String toJson() {
+            StringBuilder sb = beginJson();
+            baseJson(sb);
+            JsonUtils.addField(sb, "test", test);;
+            return endJson(sb).toString();
+        }
+    }
+
     @Test
-    public void testMiscCoverage() {
+    public void testUserClaimObjectsCoverage() throws JsonParseException {
+        EqualsVerifier.simple().forClass(GenericClaimFields.class).verify();
+        TestGenericClaimFields t1 = new TestGenericClaimFields(1);
+        TestGenericClaimFields t2 = new TestGenericClaimFields(t1.toJsonValue(), TestGenericClaimFields.TYPE, 1);
+        assertEquals(t1, t2);
+        assertThrows(IllegalArgumentException.class, () -> new TestGenericClaimFields(t1.toJsonValue(), "wrong", 1));
+        assertThrows(IllegalArgumentException.class, () -> new TestGenericClaimFields(t1.toJsonValue(), TestGenericClaimFields.TYPE, 2));
+
+        EqualsVerifier.simple().forClass(UserClaim.class).verify();
+        UserClaim uc1 = new UserClaim(JsonParser.parse(FULL_JSON));
+        UserClaim uc2 = new UserClaim(uc1.toJsonValue());
+        assertEquals(uc1, uc2);
+
+        UserClaim uc3 = new UserClaim();
+        uc3.issuerAccount("issuerAccount");
+        uc3.src("src");
+        uc3.allowedConnectionTypes(Collections.singletonList("allowed"));
+        uc3.tags("tag");
+        UserClaim uc4 = new UserClaim(uc3.toJsonValue());
+        assertEquals(uc3, uc4);
+        uc3.src(Collections.singletonList("src"));
+        uc3.tags(Collections.singletonList("tag"));
+        assertEquals(uc3, uc4);
+
+        List<TimeRange> trs1 = getTestFullTimeRanges();
+        List<TimeRange> trs2 = TimeRange.optionalListOf(JsonValueUtils.instance(trs1));
+        assertEquals(trs1, trs2);
+
+        EqualsVerifier.simple().forClass(TimeRange.class).verify();
+        TimeRange tr1 = trs1.get(0);
+        TimeRange tr2 = new TimeRange(tr1.toJsonValue());
+        assertEquals(tr1, tr2);
+
+        EqualsVerifier.simple().forClass(Permission.class).verify();
+        Permission p1 = getTestFullSub();
+        Permission p2 = Permission.optionalInstance(p1.toJsonValue());
+        assertEquals(p1, p2);
+        assertNull(Permission.optionalInstance(null));
+
+        EqualsVerifier.simple().forClass(ResponsePermission.class).verify();
+        ResponsePermission rp1 = getTestFullResponse();
+        ResponsePermission rp2 = ResponsePermission.optionalInstance(rp1.toJsonValue());
+        assertEquals(rp1, rp2);
+        rp1.expires(Duration.ofMillis(1));
+        rp2.expires(1);
+        assertEquals(rp1, rp2);
+        assertNull(ResponsePermission.optionalInstance(null));
+    }
+
+    @Test
+    public void testAuthorizationRequestObjectsCoverage() throws JsonParseException {
+        // TODO Real values and assert equals
+
+        EqualsVerifier.simple().forClass(ServerId.class).verify();
+        ServerId si1 = new ServerId(new JsonValue());
+        ServerId si2 = new ServerId(si1.toJsonValue());
+        assertEquals(si1, si2);
+        assertNull(ServerId.optionalInstance(null));
+
+        EqualsVerifier.simple().forClass(ClientInfo.class).verify();
+        ClientInfo ci1 = new ClientInfo(JsonValueUtils.mapBuilder().put("id", 1).toJsonValue());
+        ClientInfo ci2 = new ClientInfo(ci1.toJsonValue());
+        assertEquals(ci1, ci2);
+        assertNull(ClientInfo.optionalInstance(null));
+
+        EqualsVerifier.simple().forClass(ConnectOpts.class).verify();
+        ConnectOpts co1 = new ConnectOpts(new JsonValue());
+        ConnectOpts co2 = new ConnectOpts(co1.toJsonValue());
+        assertEquals(co1, co2);
+        assertNull(ConnectOpts.optionalInstance(null));
+
+        EqualsVerifier.simple().forClass(ClientTls.class).verify();
+        ClientTls ctls1 = new ClientTls(new JsonValue());
+        ClientTls ctls2 = new ClientTls(ctls1.toJsonValue());
+        assertEquals(ctls1, ctls2);
+        assertNull(ClientTls.optionalInstance(null));
+
+        EqualsVerifier.simple().forClass(AuthorizationRequest.class).verify();
+        AuthorizationRequest ar1 = new AuthorizationRequest()
+            .serverId(si1)
+            .userNkey("userNkey")
+            .clientInformation(ci1)
+            .connectOptions(co1)
+            .clientTls(ctls1)
+            .requestNonce("requestNonce");
+        AuthorizationRequest ar2 = new AuthorizationRequest(ar1.toJsonValue());
+        assertEquals(ar1, ar2);
+    }
+
+    @Test
+    public void testAuthorizationResponseObjectsCoverage() throws JsonParseException {
+        EqualsVerifier.simple().forClass(AuthorizationResponse.class).verify();
+        AuthorizationResponse ar1 = new AuthorizationResponse()
+            .jwt("jwt")
+            .error("error")
+            .issuerAccount("issuerAccount")
+            .tags("tag1", "tag\\two");
+        AuthorizationResponse ar2 = new AuthorizationResponse(ar1.toJsonValue());
+        assertEquals(ar1, ar2);
+        AuthorizationResponse ar3 = new AuthorizationResponse(ar1.toJson());
+        assertEquals(ar1, ar3);
+    }
+
+    private static ResponsePermission getTestFullResponse() {
+        return new ResponsePermission().max(99).expires(999);
+    }
+
+    private static Permission getTestFullSub() {
+        return new Permission().allow("sa1", "sa2").deny("sd1", "sd2");
+    }
+
+    private static Permission getTestFullPub() {
+        // using different fluent setter for coverage
+        return new Permission().allow(Arrays.asList("pa1", "pa2")).deny(Arrays.asList("pd1", "pd2"));
+    }
+
+    private static List<TimeRange> getTestFullTimeRanges() {
+        List<TimeRange> timeRanges = new ArrayList<>();
+        timeRanges.add(new TimeRange("01:15:00", "03:15:00"));
+        return timeRanges;
+    }
+
+    @Test
+    public void testCurrentTimeSeconds() {
         long seconds = JwtUtils.currentTimeSeconds();
         try {
             Thread.sleep(1000);

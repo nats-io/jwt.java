@@ -19,6 +19,7 @@ import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 import static io.nats.client.support.JsonUtils.beginJson;
 import static io.nats.client.support.JsonUtils.endJson;
@@ -32,7 +33,7 @@ public class ServerId implements JsonSerializable {
     public final List<String> tags;
     public final String xKey;
 
-    static ServerId optionalInstance(JsonValue jv) {
+    public static ServerId optionalInstance(JsonValue jv) {
         return jv == null ? null : new ServerId(jv);
     }
 
@@ -57,5 +58,33 @@ public class ServerId implements JsonSerializable {
         JsonUtils.addStrings(sb, "tags", tags);
         JsonUtils.addField(sb, "xKey", xKey);
         return endJson(sb).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ServerId serverId = (ServerId) o;
+
+        if (!Objects.equals(name, serverId.name)) return false;
+        if (!Objects.equals(host, serverId.host)) return false;
+        if (!Objects.equals(id, serverId.id)) return false;
+        if (!Objects.equals(version, serverId.version)) return false;
+        if (!Objects.equals(cluster, serverId.cluster)) return false;
+        if (!Objects.equals(tags, serverId.tags)) return false;
+        return Objects.equals(xKey, serverId.xKey);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (host != null ? host.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + (cluster != null ? cluster.hashCode() : 0);
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        result = 31 * result + (xKey != null ? xKey.hashCode() : 0);
+        return result;
     }
 }

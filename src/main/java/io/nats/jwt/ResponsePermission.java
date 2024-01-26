@@ -19,6 +19,7 @@ import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
 
 import java.time.Duration;
+import java.util.Objects;
 
 import static io.nats.client.support.JsonUtils.beginJson;
 import static io.nats.client.support.JsonUtils.endJson;
@@ -27,7 +28,7 @@ public class ResponsePermission implements JsonSerializable {
     public int max;
     public Duration expires;
 
-    static ResponsePermission optionalInstance(JsonValue jv) {
+    public static ResponsePermission optionalInstance(JsonValue jv) {
         return jv == null ? null : new ResponsePermission(jv);
     }
 
@@ -59,5 +60,23 @@ public class ResponsePermission implements JsonSerializable {
         JsonUtils.addField(sb, "max", max);
         JsonUtils.addFieldAsNanos(sb, "ttl", expires);
         return endJson(sb).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ResponsePermission that = (ResponsePermission) o;
+
+        if (max != that.max) return false;
+        return Objects.equals(expires, that.expires);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = max;
+        result = 31 * result + (expires != null ? expires.hashCode() : 0);
+        return result;
     }
 }
