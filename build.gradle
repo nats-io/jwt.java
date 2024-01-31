@@ -31,8 +31,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.nats:nkeys-java:1.5.1'
-    implementation 'io.nats:jnats-json:1.5.1'
+    implementation 'io.nats:nkeys-java:1.5.2'
+    implementation 'io.nats:jnats-json:1.5.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
     testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.12.3'
