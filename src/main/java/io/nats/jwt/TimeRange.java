@@ -14,15 +14,15 @@
 package io.nats.jwt;
 
 import io.nats.client.support.JsonSerializable;
-import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
+import io.nats.client.support.JsonWriteUtils;
 
 import java.util.List;
 import java.util.Objects;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 
 public class TimeRange implements JsonSerializable {
     public String start;
@@ -45,8 +45,8 @@ public class TimeRange implements JsonSerializable {
     @Override
     public String toJson() {
         StringBuilder sb = beginJson();
-        JsonUtils.addField(sb, "start", start);
-        JsonUtils.addField(sb, "end", end);
+        JsonWriteUtils.addField(sb, "start", start);
+        JsonWriteUtils.addField(sb, "end", end);
         return endJson(sb).toString();
     }
 

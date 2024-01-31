@@ -14,14 +14,14 @@
 package io.nats.jwt;
 
 import io.nats.client.support.JsonSerializable;
-import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
+import io.nats.client.support.JsonWriteUtils;
 
 import java.util.Objects;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 
 public class ConnectOpts implements JsonSerializable {
     public final String jwt;
@@ -55,16 +55,16 @@ public class ConnectOpts implements JsonSerializable {
     @Override
     public String toJson() {
         StringBuilder sb = beginJson();
-        JsonUtils.addField(sb, "jwt", jwt);
-        JsonUtils.addField(sb, "nkey", nkey);
-        JsonUtils.addField(sb, "sig", sig);
-        JsonUtils.addField(sb, "auth_token", authToken);
-        JsonUtils.addField(sb, "user", user);
-        JsonUtils.addField(sb, "pass", pass);
-        JsonUtils.addField(sb, "name", name);
-        JsonUtils.addField(sb, "lang", lang);
-        JsonUtils.addField(sb, "version", version);
-        JsonUtils.addField(sb, "protocol", protocol);
+        JsonWriteUtils.addField(sb, "jwt", jwt);
+        JsonWriteUtils.addField(sb, "nkey", nkey);
+        JsonWriteUtils.addField(sb, "sig", sig);
+        JsonWriteUtils.addField(sb, "auth_token", authToken);
+        JsonWriteUtils.addField(sb, "user", user);
+        JsonWriteUtils.addField(sb, "pass", pass);
+        JsonWriteUtils.addField(sb, "name", name);
+        JsonWriteUtils.addField(sb, "lang", lang);
+        JsonWriteUtils.addField(sb, "version", version);
+        JsonWriteUtils.addField(sb, "protocol", protocol);
         return endJson(sb).toString();
     }
 

@@ -14,16 +14,16 @@
 package io.nats.jwt;
 
 import io.nats.client.support.JsonSerializable;
-import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
+import io.nats.client.support.JsonWriteUtils;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 
 public class Permission implements JsonSerializable {
     public List<String> allow;
@@ -63,8 +63,8 @@ public class Permission implements JsonSerializable {
     @Override
     public String toJson() {
         StringBuilder sb = beginJson();
-        JsonUtils.addStrings(sb, "allow", allow);
-        JsonUtils.addStrings(sb, "deny", deny);
+        JsonWriteUtils.addStrings(sb, "allow", allow);
+        JsonWriteUtils.addStrings(sb, "deny", deny);
         return endJson(sb).toString();
     }
 

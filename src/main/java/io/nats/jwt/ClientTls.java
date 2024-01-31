@@ -14,15 +14,15 @@
 package io.nats.jwt;
 
 import io.nats.client.support.JsonSerializable;
-import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
+import io.nats.client.support.JsonWriteUtils;
 
 import java.util.List;
 import java.util.Objects;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 
 public class ClientTls implements JsonSerializable {
     public final String version;
@@ -44,9 +44,9 @@ public class ClientTls implements JsonSerializable {
     @Override
     public String toJson() {
         StringBuilder sb = beginJson();
-        JsonUtils.addField(sb, "version", version);
-        JsonUtils.addField(sb, "protocol", cipher);
-        JsonUtils.addStrings(sb, "tags", certs);
+        JsonWriteUtils.addField(sb, "version", version);
+        JsonWriteUtils.addField(sb, "protocol", cipher);
+        JsonWriteUtils.addStrings(sb, "tags", certs);
         return endJson(sb).toString();
     }
 

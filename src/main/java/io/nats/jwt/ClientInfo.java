@@ -14,15 +14,15 @@
 package io.nats.jwt;
 
 import io.nats.client.support.JsonSerializable;
-import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
+import io.nats.client.support.JsonWriteUtils;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 
 public class ClientInfo implements JsonSerializable {
     public final String host;
@@ -56,16 +56,16 @@ public class ClientInfo implements JsonSerializable {
     @Override
     public String toJson() {
         StringBuilder sb = beginJson();
-        JsonUtils.addField(sb, "host", host);
-        JsonUtils.addField(sb, "id", id);
-        JsonUtils.addField(sb, "user", user);
-        JsonUtils.addField(sb, "name", name);
-        JsonUtils.addStrings(sb, "tags", tags);
-        JsonUtils.addField(sb, "name_tag", nameTag);
-        JsonUtils.addField(sb, "kind", kind);
-        JsonUtils.addField(sb, "type", type);
-        JsonUtils.addField(sb, "mqtt_id", mqttId);
-        JsonUtils.addField(sb, "nonce", nonce);
+        JsonWriteUtils.addField(sb, "host", host);
+        JsonWriteUtils.addField(sb, "id", id);
+        JsonWriteUtils.addField(sb, "user", user);
+        JsonWriteUtils.addField(sb, "name", name);
+        JsonWriteUtils.addStrings(sb, "tags", tags);
+        JsonWriteUtils.addField(sb, "name_tag", nameTag);
+        JsonWriteUtils.addField(sb, "kind", kind);
+        JsonWriteUtils.addField(sb, "type", type);
+        JsonWriteUtils.addField(sb, "mqtt_id", mqttId);
+        JsonWriteUtils.addField(sb, "nonce", nonce);
         return endJson(sb).toString();
     }
 

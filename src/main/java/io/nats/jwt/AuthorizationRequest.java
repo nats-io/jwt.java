@@ -13,14 +13,14 @@
 
 package io.nats.jwt;
 
-import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
+import io.nats.client.support.JsonWriteUtils;
 
 import java.util.Objects;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 import static io.nats.jwt.JwtUtils.AUTH_REQUEST_CLAIM_TYPE;
 
 public class AuthorizationRequest extends GenericClaimFields<AuthorizationRequest> {
@@ -54,12 +54,12 @@ public class AuthorizationRequest extends GenericClaimFields<AuthorizationReques
     public String toJson() {
         StringBuilder sb = beginJson();
         baseJson(sb);
-        JsonUtils.addField(sb, "server_id", serverId);
-        JsonUtils.addField(sb, "user_nkey", userNkey);
-        JsonUtils.addField(sb, "client_info", clientInfo);
-        JsonUtils.addField(sb, "connect_opts", connectOpts);
-        JsonUtils.addField(sb, "client_tls", clientTls);
-        JsonUtils.addField(sb, "request_nonce", requestNonce);
+        JsonWriteUtils.addField(sb, "server_id", serverId);
+        JsonWriteUtils.addField(sb, "user_nkey", userNkey);
+        JsonWriteUtils.addField(sb, "client_info", clientInfo);
+        JsonWriteUtils.addField(sb, "connect_opts", connectOpts);
+        JsonWriteUtils.addField(sb, "client_tls", clientTls);
+        JsonWriteUtils.addField(sb, "request_nonce", requestNonce);
         return endJson(sb).toString();
     }
 

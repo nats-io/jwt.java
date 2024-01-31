@@ -14,15 +14,15 @@
 package io.nats.jwt;
 
 import io.nats.client.support.JsonSerializable;
-import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
+import io.nats.client.support.JsonWriteUtils;
 
 import java.time.Duration;
 import java.util.Objects;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 
 public class ResponsePermission implements JsonSerializable {
     public int max;
@@ -57,8 +57,8 @@ public class ResponsePermission implements JsonSerializable {
     @Override
     public String toJson() {
         StringBuilder sb = beginJson();
-        JsonUtils.addField(sb, "max", max);
-        JsonUtils.addFieldAsNanos(sb, "ttl", expires);
+        JsonWriteUtils.addField(sb, "max", max);
+        JsonWriteUtils.addFieldAsNanos(sb, "ttl", expires);
         return endJson(sb).toString();
     }
 

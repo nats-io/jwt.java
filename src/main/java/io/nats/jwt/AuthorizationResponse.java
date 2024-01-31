@@ -17,8 +17,8 @@ import io.nats.client.support.*;
 
 import java.util.Objects;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 import static io.nats.jwt.JwtUtils.AUTH_RESPONSE_CLAIM_TYPE;
 
 public class AuthorizationResponse extends GenericClaimFields<AuthorizationResponse> {
@@ -49,9 +49,9 @@ public class AuthorizationResponse extends GenericClaimFields<AuthorizationRespo
     @Override
     public String toJson() {
         StringBuilder sb = beginJson();
-        JsonUtils.addField(sb, "jwt", jwt);
-        JsonUtils.addField(sb, "error", error);
-        JsonUtils.addField(sb, "issuer_account", issuerAccount);
+        JsonWriteUtils.addField(sb, "jwt", jwt);
+        JsonWriteUtils.addField(sb, "error", error);
+        JsonWriteUtils.addField(sb, "issuer_account", issuerAccount);
         baseJson(sb);
         return endJson(sb).toString();
     }

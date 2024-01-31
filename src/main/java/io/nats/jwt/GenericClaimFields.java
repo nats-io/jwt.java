@@ -14,9 +14,9 @@
 package io.nats.jwt;
 
 import io.nats.client.support.JsonSerializable;
-import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
+import io.nats.client.support.JsonWriteUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,9 +55,9 @@ public abstract class GenericClaimFields<B> implements JsonSerializable {
     }
 
     protected void baseJson(StringBuilder sb) {
-        JsonUtils.addStrings(sb, "tags", tags);
-        JsonUtils.addField(sb, "type", type);
-        JsonUtils.addField(sb, "version", version);
+        JsonWriteUtils.addStrings(sb, "tags", tags);
+        JsonWriteUtils.addField(sb, "type", type);
+        JsonWriteUtils.addField(sb, "version", version);
     }
 
     protected abstract B getThis();
