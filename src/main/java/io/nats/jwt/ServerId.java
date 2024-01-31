@@ -14,15 +14,15 @@
 package io.nats.jwt;
 
 import io.nats.client.support.JsonSerializable;
-import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
+import io.nats.client.support.JsonWriteUtils;
 
 import java.util.List;
 import java.util.Objects;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 
 public class ServerId implements JsonSerializable {
     public final String name;
@@ -50,13 +50,13 @@ public class ServerId implements JsonSerializable {
     @Override
     public String toJson() {
         StringBuilder sb = beginJson();
-        JsonUtils.addField(sb, "name", name);
-        JsonUtils.addField(sb, "host", host);
-        JsonUtils.addField(sb, "id", id);
-        JsonUtils.addField(sb, "version", version);
-        JsonUtils.addField(sb, "cluster", cluster);
-        JsonUtils.addStrings(sb, "tags", tags);
-        JsonUtils.addField(sb, "xKey", xKey);
+        JsonWriteUtils.addField(sb, "name", name);
+        JsonWriteUtils.addField(sb, "host", host);
+        JsonWriteUtils.addField(sb, "id", id);
+        JsonWriteUtils.addField(sb, "version", version);
+        JsonWriteUtils.addField(sb, "cluster", cluster);
+        JsonWriteUtils.addStrings(sb, "tags", tags);
+        JsonWriteUtils.addField(sb, "xKey", xKey);
         return endJson(sb).toString();
     }
 

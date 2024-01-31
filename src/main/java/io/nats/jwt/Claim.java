@@ -15,8 +15,8 @@ package io.nats.jwt;
 
 import io.nats.client.support.*;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 import static io.nats.jwt.JwtUtils.*;
 
 public class Claim implements JsonSerializable {
@@ -123,15 +123,15 @@ public class Claim implements JsonSerializable {
 
     public static String toJson(Claim c, String jti) {
         StringBuilder sb = beginJson();
-        JsonUtils.addField(sb, "aud", c.aud);
-        JsonUtils.addFieldEvenEmpty(sb, "jti", jti);
-        JsonUtils.addField(sb, "iat", c.iat);
-        JsonUtils.addField(sb, "iss", c.iss);
-        JsonUtils.addField(sb, "name", c.name);
-        JsonUtils.addField(sb, "sub", c.sub);
-        JsonUtils.addFieldWhenGtZero(sb, "exp", c.exp);
-        JsonUtils.addField(sb, "nbf", c.nbf);
-        JsonUtils.addField(sb, "nats", c.nats);
+        JsonWriteUtils.addField(sb, "aud", c.aud);
+        JsonWriteUtils.addFieldEvenEmpty(sb, "jti", jti);
+        JsonWriteUtils.addField(sb, "iat", c.iat);
+        JsonWriteUtils.addField(sb, "iss", c.iss);
+        JsonWriteUtils.addField(sb, "name", c.name);
+        JsonWriteUtils.addField(sb, "sub", c.sub);
+        JsonWriteUtils.addFieldWhenGtZero(sb, "exp", c.exp);
+        JsonWriteUtils.addField(sb, "nbf", c.nbf);
+        JsonWriteUtils.addField(sb, "nats", c.nats);
         return endJson(sb).toString();
     }
 }

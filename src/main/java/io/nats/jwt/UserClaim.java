@@ -13,17 +13,17 @@
 
 package io.nats.jwt;
 
-import io.nats.client.support.JsonUtils;
 import io.nats.client.support.JsonValue;
 import io.nats.client.support.JsonValueUtils;
+import io.nats.client.support.JsonWriteUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static io.nats.client.support.JsonUtils.beginJson;
-import static io.nats.client.support.JsonUtils.endJson;
+import static io.nats.client.support.JsonWriteUtils.beginJson;
+import static io.nats.client.support.JsonWriteUtils.endJson;
 import static io.nats.jwt.JwtUtils.NO_LIMIT;
 import static io.nats.jwt.JwtUtils.USER_CLAIM_TYPE;
 
@@ -74,19 +74,19 @@ public class UserClaim extends GenericClaimFields<UserClaim> {
     @Override
     public String toJson() {
         StringBuilder sb = beginJson();
-        JsonUtils.addField(sb, "issuer_account", issuerAccount);
+        JsonWriteUtils.addField(sb, "issuer_account", issuerAccount);
         baseJson(sb);
-        JsonUtils.addField(sb, "pub", pub);
-        JsonUtils.addField(sb, "sub", sub);
-        JsonUtils.addField(sb, "resp", resp);
-        JsonUtils.addStrings(sb, "src", src);
-        JsonUtils.addJsons(sb, "times", timeRanges);
-        JsonUtils.addField(sb, "times_location", locale);
-        JsonUtils.addFieldWhenGteMinusOne(sb, "subs", subs);
-        JsonUtils.addFieldWhenGteMinusOne(sb, "data", data);
-        JsonUtils.addFieldWhenGteMinusOne(sb, "payload", payload);
-        JsonUtils.addFldWhenTrue(sb, "bearer_token", bearerToken);
-        JsonUtils.addStrings(sb, "allowed_connection_types", allowedConnectionTypes);
+        JsonWriteUtils.addField(sb, "pub", pub);
+        JsonWriteUtils.addField(sb, "sub", sub);
+        JsonWriteUtils.addField(sb, "resp", resp);
+        JsonWriteUtils.addStrings(sb, "src", src);
+        JsonWriteUtils.addJsons(sb, "times", timeRanges);
+        JsonWriteUtils.addField(sb, "times_location", locale);
+        JsonWriteUtils.addFieldWhenGteMinusOne(sb, "subs", subs);
+        JsonWriteUtils.addFieldWhenGteMinusOne(sb, "data", data);
+        JsonWriteUtils.addFieldWhenGteMinusOne(sb, "payload", payload);
+        JsonWriteUtils.addFldWhenTrue(sb, "bearer_token", bearerToken);
+        JsonWriteUtils.addStrings(sb, "allowed_connection_types", allowedConnectionTypes);
         return endJson(sb).toString();
     }
 

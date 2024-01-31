@@ -2,7 +2,9 @@
 
 # Java JWT Utilities Library
 
-The library provides utilities for reading and creating JWTs 
+The library provides utilities for reading and creating JWTs used by the NATS server.
+
+**Current Release**: 1.5.1 &nbsp; **Current Snapshot**: 1.5.2-SNAPSHOT
 
 [![License Apache 2](https://img.shields.io/badge/License-Apache2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.nats/jwt-java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.nats/jwt-java)
