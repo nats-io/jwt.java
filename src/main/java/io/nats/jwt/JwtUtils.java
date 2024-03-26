@@ -13,15 +13,16 @@
 
 package io.nats.jwt;
 
-import io.nats.client.NKey;
-import io.nats.client.support.JsonSerializable;
+import io.nats.json.JsonSerializable;
+import io.nats.nkey.NKey;
+import io.nats.nkey.NKeyType;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 
-import static io.nats.client.support.Encoding.fromBase64Url;
-import static io.nats.client.support.Encoding.toBase64Url;
+import static io.nats.json.Encoding.fromBase64Url;
+import static io.nats.json.Encoding.toBase64Url;
 
 public abstract class JwtUtils {
     public static final String USER_CLAIM_TYPE = "user";
@@ -188,18 +189,18 @@ public abstract class JwtUtils {
      */
     public static String issueUserJWT(NKey signingKey, String publicUserKey, String name, Duration expiration, Long issuedAt, String audience, UserClaim nats) throws GeneralSecurityException, IOException {
         // Validate the signingKey:
-        if (signingKey.getType() != NKey.Type.ACCOUNT) {
+        if (signingKey.getType() != NKeyType.ACCOUNT) {
             throw new IllegalArgumentException("issueUserJWT requires an account key for the signingKey parameter, but got " + signingKey.getType());
         }
 
         // Validate the accountId:
         NKey accountKey = NKey.fromPublicKey(nats.issuerAccount.toCharArray());
-        if (accountKey.getType() != NKey.Type.ACCOUNT) {
+        if (accountKey.getType() != NKeyType.ACCOUNT) {
             throw new IllegalArgumentException("issueUserJWT requires an account key for the accountId parameter, but got " + accountKey.getType());
         }
         // Validate the publicUserKey:
         NKey userKey = NKey.fromPublicKey(publicUserKey.toCharArray());
-        if (userKey.getType() != NKey.Type.USER) {
+        if (userKey.getType() != NKeyType.USER) {
             throw new IllegalArgumentException("issueUserJWT requires a user key for the publicUserKey parameter, but got " + userKey.getType());
         }
 

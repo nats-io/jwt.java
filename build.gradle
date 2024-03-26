@@ -11,7 +11,7 @@ plugins {
     id 'signing'
 }
 
-def jarVersion = "1.5.2"
+def jarVersion = "2.0.0"
 group = 'io.nats'
 
 def isMerge = System.getenv("BUILD_EVENT") == "push"
@@ -31,8 +31,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.nats:nkeys-java:1.5.2'
-    implementation 'io.nats:jnats-json:1.5.2'
+    implementation 'io.nats:nkeys-java:2.0.1'
+    implementation 'io.nats:jnats-json:2.0.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
     testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.12.3'

@@ -13,16 +13,16 @@
 
 package io.nats.jwt;
 
-import io.nats.client.support.JsonSerializable;
-import io.nats.client.support.JsonValue;
-import io.nats.client.support.JsonValueUtils;
-import io.nats.client.support.JsonWriteUtils;
+import io.nats.json.JsonSerializable;
+import io.nats.json.JsonValue;
+import io.nats.json.JsonValueUtils;
+import io.nats.json.JsonWriteUtils;
 
 import java.util.List;
 import java.util.Objects;
 
-import static io.nats.client.support.JsonWriteUtils.beginJson;
-import static io.nats.client.support.JsonWriteUtils.endJson;
+import static io.nats.json.JsonWriteUtils.beginJson;
+import static io.nats.json.JsonWriteUtils.endJson;
 
 public class ClientTls implements JsonSerializable {
     public final String version;

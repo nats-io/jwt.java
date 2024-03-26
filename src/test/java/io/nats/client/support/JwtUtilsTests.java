@@ -13,8 +13,9 @@
 
 package io.nats.client.support;
 
-import io.nats.client.NKey;
+import io.nats.json.*;
 import io.nats.jwt.*;
+import io.nats.nkey.NKey;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -24,8 +25,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static io.nats.client.support.JsonWriteUtils.beginJson;
-import static io.nats.client.support.JsonWriteUtils.endJson;
+import static io.nats.json.JsonWriteUtils.beginJson;
+import static io.nats.json.JsonWriteUtils.endJson;
 import static io.nats.jwt.JwtUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
