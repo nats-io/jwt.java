@@ -13,10 +13,10 @@
 
 package io.nats.jwt;
 
-import io.nats.client.support.*;
+import io.nats.json.*;
 
-import static io.nats.client.support.JsonWriteUtils.beginJson;
-import static io.nats.client.support.JsonWriteUtils.endJson;
+import static io.nats.json.JsonWriteUtils.beginJson;
+import static io.nats.json.JsonWriteUtils.endJson;
 import static io.nats.jwt.JwtUtils.*;
 
 public class Claim implements JsonSerializable {

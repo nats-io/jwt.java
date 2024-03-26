@@ -13,12 +13,12 @@
 
 package io.nats.jwt;
 
-import io.nats.client.support.*;
+import io.nats.json.*;
 
 import java.util.Objects;
 
-import static io.nats.client.support.JsonWriteUtils.beginJson;
-import static io.nats.client.support.JsonWriteUtils.endJson;
+import static io.nats.json.JsonWriteUtils.beginJson;
+import static io.nats.json.JsonWriteUtils.endJson;
 import static io.nats.jwt.JwtUtils.AUTH_RESPONSE_CLAIM_TYPE;
 
 public class AuthorizationResponse extends GenericClaimFields<AuthorizationResponse> {

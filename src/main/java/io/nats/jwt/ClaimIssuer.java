@@ -13,8 +13,8 @@
 
 package io.nats.jwt;
 
-import io.nats.client.NKey;
-import io.nats.client.support.JsonSerializable;
+import io.nats.json.JsonSerializable;
+import io.nats.nkey.NKey;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -22,10 +22,10 @@ import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.time.Duration;
 
-import static io.nats.client.NKeyUtils.base32Encode;
-import static io.nats.client.support.Encoding.toBase64Url;
+import static io.nats.json.Encoding.toBase64Url;
 import static io.nats.jwt.JwtUtils.ENCODED_CLAIM_HEADER;
 import static io.nats.jwt.JwtUtils.currentTimeSeconds;
+import static io.nats.nkey.NKeyUtils.base32Encode;
 
 public class ClaimIssuer {
     String aud;
