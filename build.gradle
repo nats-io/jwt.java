@@ -11,7 +11,7 @@ plugins {
     id 'signing'
 }
 
-def jarVersion = "2.0.2"
+def jarVersion = "2.1.0"
 group = 'io.nats'
 
 def isMerge = System.getenv("BUILD_EVENT") == "push"
@@ -26,12 +26,12 @@ java {
 }
 
 repositories {
-    mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    mavenCentral()
 }
 
 dependencies {
-    api 'io.nats:nkeys-java:2.0.1'
+    api 'io.nats:nkeys-java:2.1.0'
     api 'io.nats:jnats-json:2.0.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
