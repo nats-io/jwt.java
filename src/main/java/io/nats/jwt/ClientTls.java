@@ -20,6 +20,7 @@ import io.nats.json.JsonWriteUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static io.nats.json.JsonWriteUtils.beginJson;
 import static io.nats.json.JsonWriteUtils.endJson;
@@ -38,7 +39,7 @@ public class ClientTls implements JsonSerializable {
         version = JsonValueUtils.readString(jv, "version");
         cipher = JsonValueUtils.readString(jv, "cipher");
         certs = JsonValueUtils.readOptionalStringList(jv, "certs");
-        verifiedChains = null; // TODO verified_chains
+        verifiedChains = JsonValueUtils.readArray(jv, "verified_chains").stream().map(jsonObj -> JsonValueUtils.listOf(jsonObj, JsonValue::toJson)).collect(Collectors.toList());
     }
 
     @Override
