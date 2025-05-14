@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import static io.nats.json.JsonWriteUtils.beginJson;
 import static io.nats.json.JsonWriteUtils.endJson;
@@ -406,6 +408,29 @@ public class JwtUtilsTests {
         rp2.expires(1);
         assertEquals(rp1, rp2);
         assertNull(ResponsePermission.optionalInstance(null));
+    }
+
+    @Test
+    public void testVerifiedClaimsParseIsSuccessful(){
+        Map<String, JsonValue> clientTlsMap = new HashMap<>();
+        clientTlsMap.put("cipher", new JsonValue("TLS_AES_128_GCM_SHA256"));
+        clientTlsMap.put("version", new JsonValue("1.3"));
+
+        JsonValue cert = new JsonValue("-----BEGIN CERTIFICATE-----\n" +
+          "MIIFzzCCA7egAwIBAgIUTl3VZWhRLhM9XzhfzeAfHKGBgNgwDQYJKoZIhvcNAQEL\n" +
+          "-----END CERTIFICATE-----\n");
+        JsonValue certList = new JsonValue(Arrays.asList(cert));
+        List<JsonValue> groupList = Arrays.asList(certList);
+        clientTlsMap.put("verified_chains", new JsonValue(groupList));
+        JsonValue jv = new JsonValue(clientTlsMap);
+
+        ClientTls clientTls = new ClientTls(jv);
+
+        assertEquals("TLS_AES_128_GCM_SHA256", clientTls.cipher);
+        assertEquals("1.3", clientTls.version);
+        assertEquals(1, clientTls.verifiedChains.size());
+        assertEquals(1, clientTls.verifiedChains.get(0).size());
+
     }
 
     @Test
