@@ -21,14 +21,14 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 
-import static io.nats.json.Encoding.fromBase64Url;
-import static io.nats.json.Encoding.toBase64Url;
+import static io.nats.json.Encoding.base64UrlDecodeToString;
+import static io.nats.json.Encoding.base64UrlEncodeToString;
 
 public abstract class JwtUtils {
     public static final String USER_CLAIM_TYPE = "user";
     public static final String AUTH_REQUEST_CLAIM_TYPE = "authorization_request";
     public static final String AUTH_RESPONSE_CLAIM_TYPE = "authorization_response";
-    public static final String ENCODED_CLAIM_HEADER = toBase64Url("{\"typ\":\"JWT\", \"alg\":\"ed25519-nkey\"}");
+    public static final String ENCODED_CLAIM_HEADER = base64UrlEncodeToString("{\"typ\":\"JWT\", \"alg\":\"ed25519-nkey\"}");
     public static final long NO_LIMIT = -1;
 
     private JwtUtils() {} /* ensures cannot be constructed */
@@ -261,7 +261,7 @@ public abstract class JwtUtils {
      * @return the claim body json
      */
     public static String getClaimBody(String jwt) {
-        return fromBase64Url(jwt.split("\\.")[1]);
+        return base64UrlDecodeToString(jwt.split("\\.")[1]);
     }
 
     /**

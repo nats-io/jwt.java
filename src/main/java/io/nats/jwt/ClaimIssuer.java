@@ -22,7 +22,7 @@ import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.time.Duration;
 
-import static io.nats.json.Encoding.toBase64Url;
+import static io.nats.json.Encoding.base64UrlEncodeToString;
 import static io.nats.jwt.JwtUtils.ENCODED_CLAIM_HEADER;
 import static io.nats.jwt.JwtUtils.currentTimeSeconds;
 import static io.nats.nkey.NKeyUtils.base32Encode;
@@ -66,11 +66,11 @@ public class ClaimIssuer {
         initialJson = Claim.toJson(claim, issueJti);
 
         // all three components (header/body/signature) are base64url encoded
-        String encBody = toBase64Url(initialJson);
+        String encBody = base64UrlEncodeToString(initialJson);
 
         // compute the signature off of header + body (. included on purpose)
         byte[] sig = (ENCODED_CLAIM_HEADER + "." + encBody).getBytes(StandardCharsets.UTF_8);
-        String encSig = toBase64Url(signingKey.sign(sig));
+        String encSig = base64UrlEncodeToString(signingKey.sign(sig));
 
         // append signature to header and body and return it
         return ENCODED_CLAIM_HEADER + "." + encBody + "." + encSig;
