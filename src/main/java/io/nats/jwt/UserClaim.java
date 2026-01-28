@@ -16,6 +16,7 @@ package io.nats.jwt;
 import io.nats.json.JsonValue;
 import io.nats.json.JsonValueUtils;
 import io.nats.json.JsonWriteUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,14 +57,14 @@ public class UserClaim extends GenericClaimFields<UserClaim> {
         pub = Permission.optionalInstance(JsonValueUtils.readValue(jv, "pub"));
         sub = Permission.optionalInstance(JsonValueUtils.readValue(jv, "sub"));
         resp = ResponsePermission.optionalInstance(JsonValueUtils.readValue(jv, "resp"));
-        src = JsonValueUtils.readOptionalStringList(jv, "src");
+        src = JsonValueUtils.readStringListOrNull(jv, "src");
         timeRanges = TimeRange.optionalListOf(JsonValueUtils.readValue(jv, "times"));
         locale = JsonValueUtils.readString(jv, "times_location");
         subs = JsonValueUtils.readLong(jv, "subs", NO_LIMIT);
         data = JsonValueUtils.readLong(jv, "data", NO_LIMIT);
         payload = JsonValueUtils.readLong(jv, "payload", NO_LIMIT);
-        bearerToken = JsonValueUtils.readBoolean(jv, "bearer_token");
-        allowedConnectionTypes = JsonValueUtils.readOptionalStringList(jv, "allowed_connection_types");
+        bearerToken = JsonValueUtils.readBoolean(jv, "bearer_token", false);
+        allowedConnectionTypes = JsonValueUtils.readStringListOrNull(jv, "allowed_connection_types");
     }
 
     @Override
@@ -72,6 +73,7 @@ public class UserClaim extends GenericClaimFields<UserClaim> {
     }
 
     @Override
+    @NonNull
     public String toJson() {
         StringBuilder sb = beginJson();
         JsonWriteUtils.addField(sb, "issuer_account", issuerAccount);
@@ -85,7 +87,7 @@ public class UserClaim extends GenericClaimFields<UserClaim> {
         JsonWriteUtils.addFieldWhenGteMinusOne(sb, "subs", subs);
         JsonWriteUtils.addFieldWhenGteMinusOne(sb, "data", data);
         JsonWriteUtils.addFieldWhenGteMinusOne(sb, "payload", payload);
-        JsonWriteUtils.addFldWhenTrue(sb, "bearer_token", bearerToken);
+        JsonWriteUtils.addField(sb, "bearer_token", bearerToken);
         JsonWriteUtils.addStrings(sb, "allowed_connection_types", allowedConnectionTypes);
         return endJson(sb).toString();
     }

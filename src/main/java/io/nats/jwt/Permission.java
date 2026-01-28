@@ -17,6 +17,7 @@ import io.nats.json.JsonSerializable;
 import io.nats.json.JsonValue;
 import io.nats.json.JsonValueUtils;
 import io.nats.json.JsonWriteUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +37,8 @@ public class Permission implements JsonSerializable {
     public Permission() {}
 
     public Permission(JsonValue jv) {
-        allow = JsonValueUtils.readStringList(jv, "allow");
-        deny = JsonValueUtils.readStringList(jv, "deny");
+        allow = JsonValueUtils.readStringListOrEmpty(jv, "allow");
+        deny = JsonValueUtils.readStringListOrEmpty(jv, "deny");
     }
 
     public Permission allow(String... allow) {
@@ -61,6 +62,7 @@ public class Permission implements JsonSerializable {
     }
 
     @Override
+    @NonNull
     public String toJson() {
         StringBuilder sb = beginJson();
         JsonWriteUtils.addStrings(sb, "allow", allow);

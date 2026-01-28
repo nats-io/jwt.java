@@ -17,6 +17,7 @@ import io.nats.json.JsonSerializable;
 import io.nats.json.JsonValue;
 import io.nats.json.JsonValueUtils;
 import io.nats.json.JsonWriteUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,11 +39,13 @@ public class ClientTls implements JsonSerializable {
     public ClientTls(JsonValue jv) {
         version = JsonValueUtils.readString(jv, "version");
         cipher = JsonValueUtils.readString(jv, "cipher");
-        certs = JsonValueUtils.readOptionalStringList(jv, "certs");
-        verifiedChains = JsonValueUtils.readArray(jv, "verified_chains").stream().map(jsonObj -> JsonValueUtils.listOf(jsonObj, JsonValue::toJson)).collect(Collectors.toList());
+        certs = JsonValueUtils.readStringListOrNull(jv, "certs");
+        verifiedChains = JsonValueUtils.readArrayOrEmpty(jv, "verified_chains").stream()
+            .map(jsonObj -> JsonValueUtils.listOfOrEmpty(jsonObj, JsonValue::toJson)).collect(Collectors.toList());
     }
 
     @Override
+    @NonNull
     public String toJson() {
         StringBuilder sb = beginJson();
         JsonWriteUtils.addField(sb, "version", version);

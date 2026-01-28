@@ -17,6 +17,7 @@ import io.nats.json.JsonSerializable;
 import io.nats.json.JsonValue;
 import io.nats.json.JsonValueUtils;
 import io.nats.json.JsonWriteUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +30,7 @@ public class TimeRange implements JsonSerializable {
     public String end;
 
     public static List<TimeRange> optionalListOf(JsonValue jv) {
-        return JsonValueUtils.optionalListOf(jv, TimeRange::new);
+        return JsonValueUtils.listOfOrNull(jv, TimeRange::new);
     }
 
     public TimeRange(String start, String end) {
@@ -43,6 +44,7 @@ public class TimeRange implements JsonSerializable {
     }
 
     @Override
+    @NonNull
     public String toJson() {
         StringBuilder sb = beginJson();
         JsonWriteUtils.addField(sb, "start", start);

@@ -16,26 +16,36 @@ package io.nats.client.support;
 import io.nats.json.*;
 import io.nats.jwt.*;
 import io.nats.nkey.NKey;
+import io.nats.nkey.NKeyProvider;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 import static io.nats.json.JsonWriteUtils.beginJson;
 import static io.nats.json.JsonWriteUtils.endJson;
 import static io.nats.jwt.JwtUtils.*;
+import static io.nats.nkey.NKeyConstants.NKEY_PROVIDER_CLASS_SYSTEM_PROPERTY;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JwtUtilsTests {
-    static NKey USER_KEY = NKey.fromSeed("SUAGL3KX4ZBBD53BNNLSHGAAGCMXSEYZ6NTYUBUCPZQGHYNK3ZRQBUDPRY".toCharArray());
-    static NKey SIGNING_KEY = NKey.fromSeed("SAANJIBNEKGCRUWJCPIWUXFBFJLR36FJTFKGBGKAT7AQXH2LVFNQWZJMQU".toCharArray());
+
+    static NKeyProvider PROVIDER;
+    static NKey USER_KEY;
+    static NKey SIGNING_KEY;
     static String ACCOUNT_ID = "ACXZRALIL22WRETDRXYKOYDB7XC3E7MBSVUSUMFACO6OM5VPRNFMOOO6";
+
+    @BeforeAll
+    static void beforeAll() {
+        NKeyProvider.clearInstance();
+        System.setProperty(NKEY_PROVIDER_CLASS_SYSTEM_PROPERTY, "io.nats.nkey.LtsNKeyProvider");
+        PROVIDER = NKeyProvider.getProvider();
+        USER_KEY = PROVIDER.fromSeed("SUAGL3KX4ZBBD53BNNLSHGAAGCMXSEYZ6NTYUBUCPZQGHYNK3ZRQBUDPRY".toCharArray());
+        SIGNING_KEY = PROVIDER.fromSeed("SAANJIBNEKGCRUWJCPIWUXFBFJLR36FJTFKGBGKAT7AQXH2LVFNQWZJMQU".toCharArray());
+    }
 
     @Test
     public void issueUserJWTSuccessMinimal() throws Exception {
@@ -285,17 +295,17 @@ public class JwtUtilsTests {
 
     @Test
     public void issueUserJWTBadSigningKey() {
-        NKey userKey = NKey.fromSeed("SUAGL3KX4ZBBD53BNNLSHGAAGCMXSEYZ6NTYUBUCPZQGHYNK3ZRQBUDPRY".toCharArray());
+        NKey userKey = PROVIDER.fromSeed("SUAGL3KX4ZBBD53BNNLSHGAAGCMXSEYZ6NTYUBUCPZQGHYNK3ZRQBUDPRY".toCharArray());
         // should be account, but this is a user key:
-        NKey signingKey = NKey.fromSeed("SUAIW7IZ2YDQYLTE4FJ64ZBX7UMLCN57V6GHALKMUSMJCU5PJDNUO6BVUI".toCharArray());
+        NKey signingKey = PROVIDER.fromSeed("SUAIW7IZ2YDQYLTE4FJ64ZBX7UMLCN57V6GHALKMUSMJCU5PJDNUO6BVUI".toCharArray());
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> issueUserJWT(signingKey, ACCOUNT_ID, new String(userKey.getPublicKey()), null, null, null, 1633043378L));
         assertEquals("issueUserJWT requires an account key for the signingKey parameter, but got USER", e.getMessage());
     }
 
     @Test
     public void issueUserJWTBadAccountId() {
-        NKey userKey = NKey.fromSeed("SUAGL3KX4ZBBD53BNNLSHGAAGCMXSEYZ6NTYUBUCPZQGHYNK3ZRQBUDPRY".toCharArray());
-        NKey signingKey = NKey.fromSeed("SAANJIBNEKGCRUWJCPIWUXFBFJLR36FJTFKGBGKAT7AQXH2LVFNQWZJMQU".toCharArray());
+        NKey userKey = PROVIDER.fromSeed("SUAGL3KX4ZBBD53BNNLSHGAAGCMXSEYZ6NTYUBUCPZQGHYNK3ZRQBUDPRY".toCharArray());
+        NKey signingKey = PROVIDER.fromSeed("SAANJIBNEKGCRUWJCPIWUXFBFJLR36FJTFKGBGKAT7AQXH2LVFNQWZJMQU".toCharArray());
         // should be account, but this is a user key:
         String accountId = "UDN6WZFPYTS4YSUHUD4YFFU5NVKT6BVCY5QXQFYF3I23AER622SBOVUZ";
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> issueUserJWT(signingKey, accountId, new String(userKey.getPublicKey()), null, null, null, 1633043378L));
@@ -304,8 +314,8 @@ public class JwtUtilsTests {
 
     @Test
     public void issueUserJWTBadPublicUserKey() {
-        NKey userKey = NKey.fromSeed("SAADFHQTEKYBOCG4CPEPNAJ5FLRX4G4WTCNTAIOKN3LARLHGVKB4BRUHYY".toCharArray());
-        NKey signingKey = NKey.fromSeed("SAANJIBNEKGCRUWJCPIWUXFBFJLR36FJTFKGBGKAT7AQXH2LVFNQWZJMQU".toCharArray());
+        NKey userKey = PROVIDER.fromSeed("SAADFHQTEKYBOCG4CPEPNAJ5FLRX4G4WTCNTAIOKN3LARLHGVKB4BRUHYY".toCharArray());
+        NKey signingKey = PROVIDER.fromSeed("SAANJIBNEKGCRUWJCPIWUXFBFJLR36FJTFKGBGKAT7AQXH2LVFNQWZJMQU".toCharArray());
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> issueUserJWT(signingKey, ACCOUNT_ID, new String(userKey.getPublicKey()), null, null, null, 1633043378L));
         assertEquals("issueUserJWT requires a user key for the publicUserKey parameter, but got ACCOUNT", e.getMessage());
     }
@@ -352,6 +362,7 @@ public class JwtUtilsTests {
         }
 
         @Override
+        @NonNull
         public String toJson() {
             StringBuilder sb = beginJson();
             baseJson(sb);
@@ -386,7 +397,9 @@ public class JwtUtilsTests {
         assertEquals(uc3, uc4);
 
         List<TimeRange> trs1 = getTestFullTimeRanges();
-        List<TimeRange> trs2 = TimeRange.optionalListOf(JsonValueUtils.instance(trs1));
+        ArrayBuilder ab = new ArrayBuilder();
+        ab.addItems(trs1);
+        List<TimeRange> trs2 = TimeRange.optionalListOf(ab.toJsonValue());
         assertEquals(trs1, trs2);
 
         EqualsVerifier.simple().forClass(TimeRange.class).verify();
@@ -438,25 +451,25 @@ public class JwtUtilsTests {
         // TODO Real values and assert equals
 
         EqualsVerifier.simple().forClass(ServerId.class).verify();
-        ServerId si1 = new ServerId(new JsonValue());
+        ServerId si1 = new ServerId(MapBuilder.instance().jv);
         ServerId si2 = new ServerId(si1.toJsonValue());
         assertEquals(si1, si2);
         assertNull(ServerId.optionalInstance(null));
 
         EqualsVerifier.simple().forClass(ClientInfo.class).verify();
-        ClientInfo ci1 = new ClientInfo(JsonValueUtils.mapBuilder().put("id", 1).toJsonValue());
+        ClientInfo ci1 = new ClientInfo(MapBuilder.instance().put("id", 1).toJsonValue());
         ClientInfo ci2 = new ClientInfo(ci1.toJsonValue());
         assertEquals(ci1, ci2);
         assertNull(ClientInfo.optionalInstance(null));
 
         EqualsVerifier.simple().forClass(ConnectOpts.class).verify();
-        ConnectOpts co1 = new ConnectOpts(new JsonValue());
+        ConnectOpts co1 = new ConnectOpts(MapBuilder.instance().jv);
         ConnectOpts co2 = new ConnectOpts(co1.toJsonValue());
         assertEquals(co1, co2);
         assertNull(ConnectOpts.optionalInstance(null));
 
         EqualsVerifier.simple().forClass(ClientTls.class).verify();
-        ClientTls ctls1 = new ClientTls(new JsonValue());
+        ClientTls ctls1 = new ClientTls(MapBuilder.instance().jv);
         ClientTls ctls2 = new ClientTls(ctls1.toJsonValue());
         assertEquals(ctls1, ctls2);
         assertNull(ClientTls.optionalInstance(null));

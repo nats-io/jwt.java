@@ -25,7 +25,7 @@ import java.time.Duration;
 import static io.nats.json.Encoding.base64UrlEncodeToString;
 import static io.nats.jwt.JwtUtils.ENCODED_CLAIM_HEADER;
 import static io.nats.jwt.JwtUtils.currentTimeSeconds;
-import static io.nats.nkey.NKeyUtils.base32Encode;
+import static io.nats.nkey.NKeyProviderUtils.base32Encode;
 
 public class ClaimIssuer {
     String aud;

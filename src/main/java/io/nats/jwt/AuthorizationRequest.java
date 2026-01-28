@@ -16,6 +16,7 @@ package io.nats.jwt;
 import io.nats.json.JsonValue;
 import io.nats.json.JsonValueUtils;
 import io.nats.json.JsonWriteUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
@@ -51,6 +52,7 @@ public class AuthorizationRequest extends GenericClaimFields<AuthorizationReques
     }
 
     @Override
+    @NonNull
     public String toJson() {
         StringBuilder sb = beginJson();
         baseJson(sb);

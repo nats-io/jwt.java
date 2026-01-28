@@ -14,6 +14,7 @@
 package io.nats.jwt;
 
 import io.nats.json.*;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
@@ -47,6 +48,7 @@ public class AuthorizationResponse extends GenericClaimFields<AuthorizationRespo
     }
 
     @Override
+    @NonNull
     public String toJson() {
         StringBuilder sb = beginJson();
         JsonWriteUtils.addField(sb, "jwt", jwt);

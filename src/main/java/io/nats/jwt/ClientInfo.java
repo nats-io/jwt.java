@@ -17,6 +17,7 @@ import io.nats.json.JsonSerializable;
 import io.nats.json.JsonValue;
 import io.nats.json.JsonValueUtils;
 import io.nats.json.JsonWriteUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -45,7 +46,7 @@ public class ClientInfo implements JsonSerializable {
         id = JsonValueUtils.readLong(jv, "id");
         user = JsonValueUtils.readString(jv, "user");
         name = JsonValueUtils.readString(jv, "name");
-        tags = JsonValueUtils.readStringList(jv, "tags").toArray(new String[0]);
+        tags = JsonValueUtils.readStringListOrEmpty(jv, "tags").toArray(new String[0]);
         nameTag = JsonValueUtils.readString(jv, "name_tag");
         kind = JsonValueUtils.readString(jv, "kind");
         type = JsonValueUtils.readString(jv, "type");
@@ -54,6 +55,7 @@ public class ClientInfo implements JsonSerializable {
     }
 
     @Override
+    @NonNull
     public String toJson() {
         StringBuilder sb = beginJson();
         JsonWriteUtils.addField(sb, "host", host);
