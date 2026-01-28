@@ -17,6 +17,7 @@ import io.nats.json.JsonSerializable;
 import io.nats.json.JsonValue;
 import io.nats.json.JsonValueUtils;
 import io.nats.json.JsonWriteUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
@@ -53,6 +54,7 @@ public class ConnectOpts implements JsonSerializable {
     }
 
     @Override
+    @NonNull
     public String toJson() {
         StringBuilder sb = beginJson();
         JsonWriteUtils.addField(sb, "jwt", jwt);

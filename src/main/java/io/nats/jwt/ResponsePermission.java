@@ -16,6 +16,7 @@ package io.nats.jwt;
 import io.nats.json.JsonSerializable;
 import io.nats.json.JsonValue;
 import io.nats.json.JsonValueUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -34,7 +35,7 @@ public class ResponsePermission implements JsonSerializable {
 
     public ResponsePermission(JsonValue jv) {
         max = JsonValueUtils.readInteger(jv, "max", 0);
-        expires = JsonValueUtils.readNanos(jv, "ttl");
+        expires = JsonValueUtils.readNanosAsDuration(jv, "ttl");
     }
 
     public ResponsePermission max(int max) {
@@ -53,6 +54,7 @@ public class ResponsePermission implements JsonSerializable {
     }
 
     @Override
+    @NonNull
     public String toJson() {
         StringBuilder sb = beginJson();
         addField(sb, "max", max);

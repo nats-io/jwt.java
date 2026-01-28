@@ -14,6 +14,7 @@
 package io.nats.jwt;
 
 import io.nats.json.*;
+import org.jspecify.annotations.NonNull;
 
 import static io.nats.json.JsonWriteUtils.beginJson;
 import static io.nats.json.JsonWriteUtils.endJson;
@@ -117,6 +118,7 @@ public class Claim implements JsonSerializable {
     }
 
     @Override
+    @NonNull
     public String toJson() {
         return toJson(this, jti);
     }
@@ -124,7 +126,7 @@ public class Claim implements JsonSerializable {
     public static String toJson(Claim c, String jti) {
         StringBuilder sb = beginJson();
         JsonWriteUtils.addField(sb, "aud", c.aud);
-        JsonWriteUtils.addFieldEvenEmpty(sb, "jti", jti);
+        JsonWriteUtils.addFieldAlways(sb, "jti", jti);
         JsonWriteUtils.addField(sb, "iat", c.iat);
         JsonWriteUtils.addField(sb, "iss", c.iss);
         JsonWriteUtils.addField(sb, "name", c.name);

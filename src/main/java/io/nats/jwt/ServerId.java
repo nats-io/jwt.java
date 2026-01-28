@@ -17,6 +17,7 @@ import io.nats.json.JsonSerializable;
 import io.nats.json.JsonValue;
 import io.nats.json.JsonValueUtils;
 import io.nats.json.JsonWriteUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,11 +44,12 @@ public class ServerId implements JsonSerializable {
         id = JsonValueUtils.readString(jv, "id");
         version = JsonValueUtils.readString(jv, "version");
         cluster = JsonValueUtils.readString(jv, "cluster");
-        tags = JsonValueUtils.readOptionalStringList(jv, "tags");
+        tags = JsonValueUtils.readStringListOrNull(jv, "tags");
         xKey = JsonValueUtils.readString(jv, "xKey");
     }
 
     @Override
+    @NonNull
     public String toJson() {
         StringBuilder sb = beginJson();
         JsonWriteUtils.addField(sb, "name", name);

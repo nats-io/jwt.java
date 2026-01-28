@@ -39,7 +39,7 @@ public abstract class GenericClaimFields<B> implements JsonSerializable {
             throw new IllegalArgumentException("Invalid Claim Type '" + type + "', expecting '" + expectedType + "'");
         }
 
-        tags = JsonValueUtils.readOptionalStringList(jv, "tags");
+        tags = JsonValueUtils.readStringListOrNull(jv, "tags");
 
         version = JsonValueUtils.readInteger(jv, "version", -1);
         for (int v : validVersions) {

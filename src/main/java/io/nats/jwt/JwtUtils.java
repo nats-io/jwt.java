@@ -15,6 +15,7 @@ package io.nats.jwt;
 
 import io.nats.json.JsonSerializable;
 import io.nats.nkey.NKey;
+import io.nats.nkey.NKeyProvider;
 import io.nats.nkey.NKeyType;
 
 import java.io.IOException;
@@ -33,6 +34,11 @@ public abstract class JwtUtils {
 
     private JwtUtils() {} /* ensures cannot be constructed */
 
+    private static NKeyProvider PROVIDER;
+    static {
+        PROVIDER = NKeyProvider.getProvider();
+    }
+
     /**
      * Format string with `%s` placeholder for the JWT token followed
      * by the user NKey seed. This can be directly used as such:
@@ -44,19 +50,21 @@ public abstract class JwtUtils {
      * String.format(JwtUtils.NATS_USER_JWT_FORMAT, jwt, new String(userKey.getSeed()));
      * </pre>
      */
-    public static final String NATS_USER_JWT_FORMAT = "-----BEGIN NATS USER JWT-----\n" +
-            "%s\n" +
-            "------END NATS USER JWT------\n" +
-            "\n" +
-            "************************* IMPORTANT *************************\n" +
-            "NKEY Seed printed below can be used to sign and prove identity.\n" +
-            "NKEYs are sensitive and should be treated as secrets.\n" +
-            "\n" +
-            "-----BEGIN USER NKEY SEED-----\n" +
-            "%s\n" +
-            "------END USER NKEY SEED------\n" +
-            "\n" +
-            "*************************************************************\n";
+    public static final String NATS_USER_JWT_FORMAT = """
+        -----BEGIN NATS USER JWT-----
+        %s
+        ------END NATS USER JWT------
+        
+        ************************* IMPORTANT *************************
+        NKEY Seed printed below can be used to sign and prove identity.
+        NKEYs are sensitive and should be treated as secrets.
+        
+        -----BEGIN USER NKEY SEED-----
+        %s
+        ------END USER NKEY SEED------
+        
+        *************************************************************
+        """;
 
     /**
      * Get the current time in seconds since epoch. Used for issue time.
@@ -194,12 +202,12 @@ public abstract class JwtUtils {
         }
 
         // Validate the accountId:
-        NKey accountKey = NKey.fromPublicKey(nats.issuerAccount.toCharArray());
+        NKey accountKey = PROVIDER.fromPublicKey(nats.issuerAccount.toCharArray());
         if (accountKey.getType() != NKeyType.ACCOUNT) {
             throw new IllegalArgumentException("issueUserJWT requires an account key for the accountId parameter, but got " + accountKey.getType());
         }
         // Validate the publicUserKey:
-        NKey userKey = NKey.fromPublicKey(publicUserKey.toCharArray());
+        NKey userKey = PROVIDER.fromPublicKey(publicUserKey.toCharArray());
         if (userKey.getType() != NKeyType.USER) {
             throw new IllegalArgumentException("issueUserJWT requires a user key for the publicUserKey parameter, but got " + userKey.getType());
         }
