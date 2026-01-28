@@ -17,8 +17,8 @@ The library provides utilities for reading and creating JWTs used by the NATS se
 This project uses Java 8 Language Level api, but builds jars compiled with and targeted for Java 8, 17, 21 and 25.
 It creates different artifacts for each. All have the same group id `io.nats` and the same version but have different artifact names.
 
-| Java Target Level | Artifact Id        |                                                                     Maven Central                                                                      |
-|:-----------------:|--------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Java Target Level | Artifact Id       |                                                                    Maven Central                                                                     |
+|:-----------------:|-------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------:|
 |        17         | `jwt-utils-jdk17` | [![Maven JDK 17](https://img.shields.io/maven-central/v/io.nats/jwt-utils-jdk17?label=)](https://mvnrepository.com/artifact/io.nats/jwt-utils-jdk17) |
 |        21         | `jwt-utils-jdk21` | [![Maven JDK 21](https://img.shields.io/maven-central/v/io.nats/jwt-utils-jdk21?label=)](https://mvnrepository.com/artifact/io.nats/jwt-utils-jdk21) |
 |        25         | `jwt-utils-jdk25` | [![Maven JDK 25](https://img.shields.io/maven-central/v/io.nats/jwt-utils-jdk25?label=)](https://mvnrepository.com/artifact/io.nats/jwt-utils-jdk25) |
