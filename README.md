@@ -9,7 +9,7 @@ The library provides utilities for reading and creating JWTs used by the NATS se
 
 [![Build Main Badge](https://github.com/nats-io/jwt.java/actions/workflows/build-main.yml/badge.svg?event=push)](https://github.com/nats-io/jwt.java/actions/workflows/build-main.yml)
 [![Coverage Status](https://coveralls.io/repos/github/nats-io/jwt.java/badge?branch=main)](https://coveralls.io/github/nats-io/jwt.java?branch=main)
-[![Javadoc](http://javadoc.io/badge/io.nats/jwt.java.svg?branch=main)](http://javadoc.io/doc/io.nats/jwt.java?branch=main)
+[![Javadoc](http://javadoc.io/badge/io.nats/jwt-java.svg?branch=main)](http://javadoc.io/doc/io.nats/jwt-java?branch=main)
 [![License Apache 2](https://img.shields.io/badge/License-Apache2-blue)](https://www.apache.org/licenses/LICENSE-2.0)
 
 ### JDK Version
